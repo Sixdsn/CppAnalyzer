@@ -32,5 +32,5 @@ def display_class(classe, full):
         all_Omeths = classe.Ofuncs + classe.Omeths
         print("Overriding Methods: %d"% len(all_Omeths))
         for classOfuncs in all_Omeths:
-            print(classe.name + ": " + classOfuncs[0])
+            print(classe.name + ": " + classOfuncs[0] + " from: "+ classOfuncs[5])
     print("")

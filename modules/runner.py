@@ -9,7 +9,6 @@ import stats
 
 class SIXAnalyzer_runner():
     def __init__(self):
-        self.classes = []
         with concurrent.futures.ProcessPoolExecutor(max_workers=2) as executor:
             future_files = executor.submit(files.get_files)
             future_header_files = executor.submit(files.get_header_files)
@@ -18,9 +17,9 @@ class SIXAnalyzer_runner():
         self.builder = SIXAnalyzer_builder(self.files, self.header_files)
 
     def run(self):
-        self.classes = self.builder.init()
-        stats.display(self.classes, self.files, self.header_files)
+        self.builder.init()
+        stats.display(self.builder.get_classes(), self.files, self.header_files)
         self.builder.run()
-        stats.display(self.classes, self.files, self.header_files)
-        self.finder = SIXAnalyzer_finder(self.classes)
+        stats.display(self.builder.get_classes(), self.files, self.header_files)
+        self.finder = SIXAnalyzer_finder(self.builder.get_classes())
         self.finder.run()
