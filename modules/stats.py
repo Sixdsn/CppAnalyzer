@@ -20,20 +20,20 @@ def display(classes, files, header_files):
     SIXAnalyzer_logger.print_verbose("Found %d methods" % tot_meths)
 
 def display_class(classe):
-    SIXAnalyzer_logger.print_debug("File: " + classe.filename)
-    SIXAnalyzer_logger.print_debug("Class: " + classe.name)
+    print("File: " + classe.filename)
+    print("Class: " + classe.name)
     for inherit in classe.inherits:
-        SIXAnalyzer_logger.print_debug("From: " + inherit)
-    SIXAnalyzer_logger.print_debug("Func: %d"% len(classe.funcs))
+        print("From: " + inherit)
+    print("Func: %d"% len(classe.funcs))
     for classfuncs in classe.funcs:
-        SIXAnalyzer_logger.print_debug(classe.name + ": " + classfuncs[0] + " | " + classfuncs[2])
-    SIXAnalyzer_logger.print_debug("Meths: %d"% len(classe.meths))
+        print(classe.name + ": " + classfuncs[0] + " | " + classfuncs[2])
+    print("Meths: %d"% len(classe.meths))
     for classmeths in classe.meths:
-        SIXAnalyzer_logger.print_debug(classe.name + ": " + classmeths[0] + " | " + classmeths[2])
-    SIXAnalyzer_logger.print_debug("Overriding Func: %d"% len(classe.Ofuncs))
+        print(classe.name + ": " + classmeths[0] + " | " + classmeths[2])
+    print("Overriding Func: %d"% len(classe.Ofuncs))
     for classOfuncs in classe.Ofuncs:
-        SIXAnalyzer_logger.print_debug(classe.name + ": " + classOfuncs[0])
-    SIXAnalyzer_logger.print_debug("Overriding Meths: %d"% len(classe.Omeths))
+        print(classe.name + ": " + classOfuncs[0])
+    print("Overriding Meths: %d"% len(classe.Omeths))
     for classOmeths in classe.Omeths:
-        SIXAnalyzer_logger.print_debug(classe.name + ": " + classOmeths[0])
-    SIXAnalyzer_logger.print_debug("")
+        print(classe.name + ": " + classOmeths[0])
+    print("")

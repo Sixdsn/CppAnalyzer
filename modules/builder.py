@@ -21,6 +21,7 @@ file_cpt = Value('i', -1)
 class SIXAnalyzer_builder():
     def __init__(self, files, idl_files):
         self.classes = {}
+        self.good_classes = {}
         self.files = files
         self.idl_files = idl_files
         CppHeaderParser.ignoreSymbols += SIXAnalyzer_rules.to_ignore
@@ -28,6 +29,10 @@ class SIXAnalyzer_builder():
     def init(self):
         self.parse_header_files()
         return (self.classes)
+
+
+    def get_classes(self):
+        return self.classes
 
     def run(self):
         SIXAnalyzer_logger.print_info("Stage */6: Managing Typedef's")

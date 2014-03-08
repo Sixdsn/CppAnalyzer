@@ -3,6 +3,7 @@
 import concurrent.futures
 
 from builder import SIXAnalyzer_builder
+from finder import SIXAnalyzer_finder
 import files
 import stats
 
@@ -21,3 +22,5 @@ class SIXAnalyzer_runner():
         stats.display(self.classes, self.files, self.header_files)
         self.builder.run()
         stats.display(self.classes, self.files, self.header_files)
+        self.finder = SIXAnalyzer_finder(self.classes)
+        self.finder.run()
