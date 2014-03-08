@@ -19,18 +19,33 @@ def display(classes, files, header_files):
     SIXAnalyzer_logger.print_verbose("Found %d member functions" % tot_mems)
     SIXAnalyzer_logger.print_verbose("Found %d methods" % tot_meths)
 
-def display_class(classe, full):
-    print("File: " + classe.filename)
-    print("Class: " + classe.name)
-    for inherit in classe.inherits:
-        print("\t Inherits From: " + inherit)
-    if full:
+def display_meths_class(classe, frome=False):
+    all_Omeths = classe.Ofuncs + classe.Omeths
+    if (frome):
         all_meths = classe.funcs + classe.meths
-        print("Methods: %d"% len(all_meths))
+        print("\t[Methods]: %d"% len(all_meths))
         for classfuncs in all_meths:
-            print(classe.name + ": " + classfuncs[0] + " | " + classfuncs[2])
-        all_Omeths = classe.Ofuncs + classe.Omeths
-        print("Overriding Methods: %d"% len(all_Omeths))
+            print("\t\t%s: %s"% (classe.name, classfuncs[0]))
+        print("\t[Overriding Methods]: %d"% len(all_Omeths))
         for classOfuncs in all_Omeths:
-            print(classe.name + ": " + classOfuncs[0] + " from: "+ classOfuncs[5])
+            print("\t\t%s: %s FROM: %s"% (classe.name, classOfuncs[0], classOfuncs[5]))
+    else:
+        for classOfuncs in all_Omeths:
+            print("\t\t%s: %s"% (classe.name, classOfuncs[0]))
+def display_class(classe, full, childs):
+    print("[Class]: %s"% classe.name)
+    print("[In File]: %s"% classe.filename)
+    for inherit in classe.inherits:
+        print("\tInherits From: " + inherit)
+    for herits in childs:
+        print("\tClass heriting are: " + herits.name)
+    if full:
+        display_meths_class(classe, True)
+        count = 0
+        for herits in childs:
+            count += len(herits.Ofuncs + herits.Omeths)
+        if (count > 0):
+            print("\t[Methods Overrided in child classes]: %d"% count)
+            for herits in childs:
+                display_meths_class(herits)
     print("")

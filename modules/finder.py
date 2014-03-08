@@ -24,6 +24,14 @@ class SIXAnalyzer_finder():
             return (None)
         return (sorted(res, key=lambda classe: (classe.filename.lower(), classe.name.lower())))
 
+    def get_child_class(self, classes):
+        res = []
+        for classe in classes:
+            for cl in self.classes:
+                if classe.name in cl.inherits:
+                    res.extend(self.get_class_by_name(cl.name))
+        return (res)
+
     def run_help(self):
         print("All parameters are interepreted as regex")
         print("But use '*' carefully :)")
@@ -39,8 +47,9 @@ class SIXAnalyzer_finder():
         if not classes:
             print("No results for File: '%s'"% fname)
             return
+        child_classes = self.get_child_class(classes)
         for classe in classes:
-            stats.display_class(classe, full)
+            stats.display_class(classe, full, child_classes)
 
     def run_pcf(self, classe):
         self.run_pc(classe, full=True)
@@ -50,8 +59,9 @@ class SIXAnalyzer_finder():
         if not classes:
             print("No results for Class: '%s'"% classe)
             return
+        child_classes = self.get_child_class(classes)
         for classe in classes:
-            stats.display_class(classe, full)
+            stats.display_class(classe, full, child_classes)
 
     def run_sc(self, classe):
         classes = self.get_class_by_name(classe)
