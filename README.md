@@ -24,13 +24,17 @@ Usage:
 `./main.py Path [-v|-d] [-h|--help] [-J Workers] [-I header_folder]`
 
 > Path		  => Path to the files you want to add MOZ_OVERRIDE
+
 > -v 		  => Verbose Mode
+
 > -d 		  => Debug Mode
+
 > -h		  => Obvious
-> -J      => Number of parallel workers used to parse and generate the database 
-              (be carreful, it's using processes so memory usage is very important)
-> -I header_folder  => Another path to parse header files
->      		     very usefull if some of your classes in Path included files that aren't in the same folder
+
+> -J      => Number of parallel workers used to parse and generate the database (be carreful, it's using processes so memory usage is very important)
+
+> -I header_folder  => Another path to parse header files very usefull if some of your classes in Path included files that aren't in the same folder
+
 
 CLI Commands:
 
