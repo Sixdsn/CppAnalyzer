@@ -39,12 +39,13 @@ Usage:
 CLI Commands:
 
 ```
-$> pc [classname] => Shows Basic Class Intels
-$> pcf [classname] => Shows All Class Intels
-$> pf [filename] => Shows Basic Class Intels contained in Filename
-$> pff [filename] => Shows All Class Intels contained in Filename
-$> sc [classname] => Search Class
-$> sf [filename] => Shows Files
+$> pc   [classname] => Shows Basic Class Intels
+$> pcf  [classname] => Shows All Class Intels
+$> pf   [filename]  => Shows Basic Class Intels contained in Filename
+$> pff  [filename]  => Shows All Class Intels contained in Filename
+$> sc   [classname] => Search Class
+$> sf   [filename]  => Search Files
+$> sm   [method]    => Search Methods
 ```
 Of course feel free to open a issue if you want a new command/feature or if you have a question
 
