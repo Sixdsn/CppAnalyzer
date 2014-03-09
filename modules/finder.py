@@ -1,4 +1,4 @@
-import reader, fnmatch, sys
+import reader, fnmatch, sys, os, glob, imp
 
 from collections import OrderedDict
 
@@ -6,6 +6,7 @@ import stats
 
 class SIXAnalyzer_finder():
     def __init__(self, classes):
+        self.modules_loaded = []
         self.classes = sorted(classes, key=lambda classe: classe.name.lower())
         self.cmd = { 
             "pc": [ self.run_pc, " [classname]\t=> Shows Basic Class Intels" ], \
@@ -14,9 +15,41 @@ class SIXAnalyzer_finder():
             "pff": [ self.run_pff, "[filename]\t=> Shows All Class Intels contained in Filename"], \
             "sc": [ self.run_sc, " [classname]\t=> Search Class" ], \
             "sf": [ self.run_sf, " [filename]\t=> Search Files" ], \
-            "sm": [ self.run_sm, " [method]\t\t=> Search Methods" ]
+            "sm": [ self.run_sm, " [method]\t\t=> Search Methods" ], \
+            "imp": [ self.run_imp, " [module]\t\t=> Import Module" ]
         }
+        self.autoload_modules()
         self.cmd = OrderedDict(sorted(self.cmd.items(), key=lambda kv: kv[0].lower()))
+
+    def import_module(self, uri):
+        if (uri[0] != '/'):
+            uri = os.path.dirname(os.path.realpath(__file__ + "/..")) + "/" + uri
+        path, fname = os.path.split(uri)
+        mname, ext = os.path.splitext(fname)
+        no_ext = os.path.join(path, mname)
+        if no_ext not in self.modules_loaded:
+            if os.path.exists(no_ext + '.py'):
+                try:
+                    mod = imp.load_source(mname, no_ext + '.py').init()
+                    self.modules_loaded.append(no_ext)
+                    return mod
+                except:
+                    pass
+            elif os.path.exists(no_ext + '.pyc'):
+                try:
+                    mod = imp.load_compiled(mname, no_ext + '.pyc').init()
+                    self.modules_loaded.append(no_ext)
+                    return mod
+                except:
+                    pass
+        else:
+            print("Modules '%s' Already Loaded"% mname)
+
+    def autoload_modules(self):
+        for fname in glob.glob("services/*.py"):
+            self.run_imp(fname)
+        for fname in glob.glob("services/*.pyc"):
+            self.run_imp(fname)
 
     def get_class_by_name(self, classname):
         res = [ elem for elem in self.classes if fnmatch.fnmatch(elem.name, classname) ]
@@ -44,6 +77,19 @@ class SIXAnalyzer_finder():
         print("")
         for cmd, elems in self.cmd.iteritems():
             print("\t$>%s %s"% (cmd, elems[1]))
+
+    def run_imp(self, module):
+        mod = self.import_module(module)
+        if (not mod):
+            return
+        for cmd, elems in mod.iteritems():
+            if (cmd in self.cmd):
+                print("Command: '%s' is already defined"% cmd)
+                return
+        print("Module Loaded: %s"% module)
+        for cmd, elems in mod.iteritems():
+            print("\t$>%s %s"% (cmd, elems[1]))
+        self.cmd.update(mod)
 
     def run_pff(self, fname):
         self.run_pf(fname, full=True)
