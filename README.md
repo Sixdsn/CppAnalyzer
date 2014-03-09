@@ -42,12 +42,12 @@ CLI Commands:
 All parameters are interepreted as regex
 But use '*' carefully :)
 
-$> imp    [module]		=> Import Module
+$> imp    [module]    => Import Module
 $> pc     [classname] => Shows Basic Class Intels
 $> pcf    [classname] => Shows All Class Intels
 $> pf     [filename]  => Shows Basic Class Intels contained in Filename
 $> pff    [filename]  => Shows All Class Intels contained in Filename
-$> reload [module]   => Reimport Module
+$> reload [module]    => Reimport Module
 $> sc     [classname] => Search Class
 $> sf     [filename]  => Search Files
 $> sm     [method]    => Search Methods
