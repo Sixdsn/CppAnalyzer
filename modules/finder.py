@@ -1,16 +1,22 @@
 import reader, fnmatch, sys
 
+from collections import OrderedDict
+
 import stats
 
 class SIXAnalyzer_finder():
     def __init__(self, classes):
-        self.classes = classes
-        self.cmd = { "pc": [ self.run_pc, "[classname] => Shows Basic Class Intels" ], \
-                     "pcf": [ self.run_pcf, "[classname] => Shows All Class Intels" ], \
-                     "pf": [ self.run_pf, "[filename] => Shows Basic Class Intels contained in Filename"], \
-                     "pff": [ self.run_pff, "[filename] => Shows All Class Intels contained in Filename"], \
-                     "sc": [ self.run_sc, "[classname] => Search Class" ], \
-                     "sf": [ self.run_sf, "[filename] => Shows Files" ] }
+        self.classes = sorted(classes, key=lambda classe: classe.name.lower())
+        self.cmd = { 
+            "pc": [ self.run_pc, " [classname]\t=> Shows Basic Class Intels" ], \
+            "pcf": [ self.run_pcf, "[classname]\t=> Shows All Class Intels" ], \
+            "pf": [ self.run_pf, " [filename]\t=> Shows Basic Class Intels contained in Filename"], \
+            "pff": [ self.run_pff, "[filename]\t=> Shows All Class Intels contained in Filename"], \
+            "sc": [ self.run_sc, " [classname]\t=> Search Class" ], \
+            "sf": [ self.run_sf, " [filename]\t=> Search Files" ], \
+            "sm": [ self.run_sm, " [method]\t\t=> Search Methods" ]
+        }
+        self.cmd = OrderedDict(sorted(self.cmd.items(), key=lambda kv: kv[0].lower()))
 
     def get_class_by_name(self, classname):
         res = [ elem for elem in self.classes if fnmatch.fnmatch(elem.name, classname) ]
@@ -30,7 +36,7 @@ class SIXAnalyzer_finder():
             for cl in self.classes:
                 if classe.name in cl.inherits:
                     res.extend(self.get_class_by_name(cl.name))
-        return (res)
+        return (sorted(res, key=lambda classe: classe.name.lower()))
 
     def run_help(self):
         print("All parameters are interepreted as regex")
@@ -76,8 +82,19 @@ class SIXAnalyzer_finder():
         if not classes:
             print("No results for File: '%s'"% fname)
             return
-        for classe in sorted(set(classes)):
+        for classe in classes:
             print(classe.filename)
+
+    def run_sm(self, meths):
+        for classe in self.classes:
+            all_meths = classe.funcs + classe.meths
+            for meth in all_meths:
+                if fnmatch.fnmatch(meth[4], meths):
+                    print("\t%s: %s"% (classe.name, meth[0]))
+            all_Omeths = classe.Ofuncs + classe.Omeths
+            for Ometh in all_Omeths:
+                if fnmatch.fnmatch(Ometh[4], meths):
+                    print("\t%s: %s FROM: %s"% (classe.name, Ometh[0],  Ometh[5]))
 
     def run(self):
         while (True):

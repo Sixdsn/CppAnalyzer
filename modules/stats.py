@@ -32,6 +32,7 @@ def display_meths_class(classe, frome=False):
     else:
         for classOfuncs in all_Omeths:
             print("\t\t%s: %s"% (classe.name, classOfuncs[0]))
+
 def display_class(classe, full, childs):
     print("[Class]: %s"% classe.name)
     print("[In File]: %s"% classe.filename)
