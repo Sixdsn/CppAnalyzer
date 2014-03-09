@@ -42,6 +42,7 @@ CLI Commands:
 All parameters are interepreted as regex
 But use '*' carefully :)
 
+$> imp  [module]		=> Import Module
 $> pc   [classname] => Shows Basic Class Intels
 $> pcf  [classname] => Shows All Class Intels
 $> pf   [filename]  => Shows Basic Class Intels contained in Filename
@@ -50,6 +51,14 @@ $> sc   [classname] => Search Class
 $> sf   [filename]  => Search Files
 $> sm   [method]    => Search Methods
 ```
-Of course feel free to open a issue if you want a new command/feature or if you have a question
+CppAnalyzer will try to load all modules from the services/ folder at startup.
 
+You can add any other personnal module by using the "imp" command and giving it the module path (absolute or relative)
+
+Module MUST have a init() function that return a dict containing the "Command" as key and a list containing the function to call and the message to print within the "help" command.
+
+There is an example in services/six.py
+
+
+Of course feel free to open a issue if you want a new command/feature or if you have a question
 
