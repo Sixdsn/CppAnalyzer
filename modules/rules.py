@@ -9,7 +9,8 @@ class SIXAnalyzer_rules():
 
     config = configparser.SafeConfigParser(
         {
-            'extensions': "*.h,*.hh,*.hpp",
+            'header_extensions': "*.h,*.hh,*.hpp",
+            'path_extensions': "*.h,*.hh,*.hpp,*.cpp",
         })
 
     cfg_dir = './'
@@ -167,13 +168,20 @@ class SIXAnalyzer_rules():
 
     @staticmethod
     def init():
-        base_ext = SIXAnalyzer_rules.get_conf('extensions').replace('"', '').split(',')
+        base_ext = SIXAnalyzer_rules.get_conf('path_extensions').replace('"', '').split(',')
         extensions = ""
         for ext in range(len(base_ext)):
             extensions += "-name \"" + base_ext[ext] + "\" "
             if (ext + 1 < len(base_ext)):
                 extensions += "-or "
-        SIXAnalyzer_rules.config.set(SIXAnalyzer_rules.namespace, 'extensions', extensions)
+        SIXAnalyzer_rules.config.set(SIXAnalyzer_rules.namespace, 'path_extensions', extensions)
+        base_ext = SIXAnalyzer_rules.get_conf('header_extensions').replace('"', '').split(',')
+        extensions = ""
+        for ext in range(len(base_ext)):
+            extensions += "-name \"" + base_ext[ext] + "\" "
+            if (ext + 1 < len(base_ext)):
+                extensions += "-or "
+        SIXAnalyzer_rules.config.set(SIXAnalyzer_rules.namespace, 'header_extensions', extensions)
 
     @staticmethod
     def get_conf(key):

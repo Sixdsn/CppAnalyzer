@@ -7,10 +7,6 @@ from logger import SIXAnalyzer_logger
 from rules import SIXAnalyzer_rules
 
 class SIXAnalyzer_files():
-    def __init__(self):
-        #besoin d'ajouter check si files est vide ou ['']
-        pass
-
     @staticmethod
     def get_files():
         return (SIXAnalyzer_files.files)
@@ -28,7 +24,7 @@ class SIXAnalyzer_files():
             SIXAnalyzer_logger.print_info("Getting Files from header_folder: " + SIXAnalyzer_options.header_folder)
             header_files = subprocess.check_output("find " + SIXAnalyzer_options.header_folder + 
                                                 " -type f -readable \( " +
-                                                SIXAnalyzer_rules.get_conf('extensions') +
+                                                SIXAnalyzer_rules.get_conf('header_extensions') +
                                                 " \) -and -not -path \"" +
                                                 SIXAnalyzer_options.path + "*\" | sort", shell=True).decode().split("\n")
         return (header_files)
@@ -36,8 +32,8 @@ class SIXAnalyzer_files():
     def __find_files():
         SIXAnalyzer_logger.print_info("Stage 1/6: Getting files to parse: %s"% SIXAnalyzer_options.path)
         files = subprocess.check_output("find " + SIXAnalyzer_options.path + " -type f -readable " +
-                                        SIXAnalyzer_rules.get_conf('extensions') +
-                                        " -or -name \"*.cpp\" | sort", shell=True).decode().split("\n")
+                                        SIXAnalyzer_rules.get_conf('path_extensions') +
+                                        " | sort", shell=True).decode().split("\n")
         return (files)
 
     files = __find_files()
