@@ -71,13 +71,13 @@ class SIXAnalyzer_finder():
             self.run_imp(fname)
 
     def get_class_by_name(self, classname):
-        res = [ elem for elem in self.classes if fnmatch.fnmatch(elem.name, classname) ]
+        res = [ elem for elem in self.classes if fnmatch.fnmatch(elem.name.lower(), classname.lower()) ]
         if (len(res) == 0):
             return (None)
         return (sorted(res, key=lambda classe: classe.name.lower()))
 
     def get_class_by_filename(self, filename):
-        res = [ elem for elem in self.classes if fnmatch.fnmatch(elem.filename, filename) ]
+        res = [ elem for elem in self.classes if fnmatch.fnmatch(elem.filename.lower(), filename.lower()) ]
         if (len(res) == 0):
             return (None)
         return (sorted(res, key=lambda classe: (classe.filename.lower(), classe.name.lower())))
