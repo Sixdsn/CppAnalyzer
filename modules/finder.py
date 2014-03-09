@@ -118,8 +118,8 @@ class SIXAnalyzer_finder():
         if not classes:
             print("No results for File: '%s'"% fname)
             return
-        child_classes = self.get_child_class(classes)
         for classe in classes:
+            child_classes = self.get_child_class([ classe ])
             stats.display_class(classe, full, child_classes)
 
     def run_pcf(self, classe):
@@ -130,8 +130,8 @@ class SIXAnalyzer_finder():
         if not classes:
             print("No results for Class: '%s'"% classe)
             return
-        child_classes = self.get_child_class(classes)
         for classe in classes:
+            child_classes = self.get_child_class([ classe ])
             stats.display_class(classe, full, child_classes)
 
     def run_sc(self, classe):
