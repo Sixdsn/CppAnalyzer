@@ -42,14 +42,15 @@ CLI Commands:
 All parameters are interepreted as regex
 But use '*' carefully :)
 
-$> imp  [module]		=> Import Module
-$> pc   [classname] => Shows Basic Class Intels
-$> pcf  [classname] => Shows All Class Intels
-$> pf   [filename]  => Shows Basic Class Intels contained in Filename
-$> pff  [filename]  => Shows All Class Intels contained in Filename
-$> sc   [classname] => Search Class
-$> sf   [filename]  => Search Files
-$> sm   [method]    => Search Methods
+$> imp    [module]		=> Import Module
+$> pc     [classname] => Shows Basic Class Intels
+$> pcf    [classname] => Shows All Class Intels
+$> pf     [filename]  => Shows Basic Class Intels contained in Filename
+$> pff    [filename]  => Shows All Class Intels contained in Filename
+$> reload [module]   => Reimport Module
+$> sc     [classname] => Search Class
+$> sf     [filename]  => Search Files
+$> sm     [method]    => Search Methods
 ```
 CppAnalyzer will try to load all modules from the services/ folder at startup.
 
