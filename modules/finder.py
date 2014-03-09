@@ -4,6 +4,14 @@ from collections import OrderedDict
 
 import stats
 
+def get_module_path(uri):
+    if (uri[0] != '/'):
+        uri = os.path.dirname(os.path.realpath(__file__ + "/..")) + "/" + uri
+    path, fname = os.path.split(uri)
+    mname, ext = os.path.splitext(fname)
+    no_ext = os.path.join(path, mname)
+    return (mname, no_ext)
+
 class SIXAnalyzer_finder():
     def __init__(self, classes):
         self.modules_loaded = []
@@ -16,17 +24,14 @@ class SIXAnalyzer_finder():
             "sc": [ self.run_sc, " [classname]\t=> Search Class" ], \
             "sf": [ self.run_sf, " [filename]\t=> Search Files" ], \
             "sm": [ self.run_sm, " [method]\t\t=> Search Methods" ], \
-            "imp": [ self.run_imp, " [module]\t\t=> Import Module" ]
+            "imp": [ self.run_imp, " [module]\t\t=> Import Module" ], \
+            "reload": [ self.reload_module, " [module]\t\t=> Reimport Module" ]
         }
         self.autoload_modules()
         self.cmd = OrderedDict(sorted(self.cmd.items(), key=lambda kv: kv[0].lower()))
 
     def import_module(self, uri):
-        if (uri[0] != '/'):
-            uri = os.path.dirname(os.path.realpath(__file__ + "/..")) + "/" + uri
-        path, fname = os.path.split(uri)
-        mname, ext = os.path.splitext(fname)
-        no_ext = os.path.join(path, mname)
+        mname, no_ext = get_module_path(uri)
         if no_ext not in self.modules_loaded:
             if os.path.exists(no_ext + '.py'):
                 try:
@@ -44,6 +49,20 @@ class SIXAnalyzer_finder():
                     pass
         else:
             print("Modules '%s' Already Loaded"% mname)
+
+    def reload_module(self, modname):
+        mname, no_ext = get_module_path(modname)
+        self.modules_loaded.remove(no_ext)
+        mod = self.import_module(modname)
+        if (not mod):
+            return
+        for cmd, elems in mod.iteritems():
+            if (cmd in self.cmd):
+                self.cmd.pop(cmd)
+        print("Module Loaded: %s"% modname)
+        for cmd, elems in mod.iteritems():
+            print("\t$>%s %s"% (cmd, elems[1]))
+        self.cmd.update(mod)
 
     def autoload_modules(self):
         for fname in glob.glob("services/*.py"):
