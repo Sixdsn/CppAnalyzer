@@ -135,11 +135,11 @@ class SIXAnalyzer_finder():
         for classe in self.classes:
             all_meths = classe.funcs + classe.meths
             for meth in all_meths:
-                if fnmatch.fnmatch(meth[4], meths):
+                if fnmatch.fnmatch(meth[4].lower(), meths.lower()):
                     print("\t%s: %s"% (classe.name, meth[0]))
             all_Omeths = classe.Ofuncs + classe.Omeths
             for Ometh in all_Omeths:
-                if fnmatch.fnmatch(Ometh[4], meths):
+                if fnmatch.fnmatch(Ometh[4].lower(), meths.lower()):
                     print("\t%s: %s FROM: %s"% (classe.name, Ometh[0],  Ometh[5]))
 
     def run(self):
