@@ -39,6 +39,9 @@ Usage:
 CLI Commands:
 
 ```
+All parameters are interepreted as regex
+But use '*' carefully :)
+
 $> pc   [classname] => Shows Basic Class Intels
 $> pcf  [classname] => Shows All Class Intels
 $> pf   [filename]  => Shows Basic Class Intels contained in Filename
