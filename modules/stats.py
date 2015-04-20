@@ -1,8 +1,16 @@
 #!/usr/bin/python
 
-from logger import SIXAnalyzer_logger
+import logging
+
+file_issues = []
+
+def add_file_issues(fname):
+    global file_issues
+
+    file_issues.append(fname)
 
 def display(classes, files, header_files):
+    global file_issues
     tot_meths = 0
     tot_mems = 0
 
@@ -10,14 +18,14 @@ def display(classes, files, header_files):
         tot_meths += len(cppclass.funcs)
         tot_mems += len(cppclass.meths)
     print("")
-    SIXAnalyzer_logger.print_verbose("Got %d File Issues" % len(SIXAnalyzer_logger.file_issue))
-    for f in SIXAnalyzer_logger.file_issue:
-        SIXAnalyzer_logger.print_debug(" -> %s"% f)
-    SIXAnalyzer_logger.print_verbose("Found %d files to check" % len(files))
-    SIXAnalyzer_logger.print_verbose("Found %d header files" % len(header_files))
-    SIXAnalyzer_logger.print_verbose("Found %d classes" % len(classes))
-    SIXAnalyzer_logger.print_verbose("Found %d member functions" % tot_mems)
-    SIXAnalyzer_logger.print_verbose("Found %d methods" % tot_meths)
+    logging.info("Got %d File Issues" % len(file_issues))
+    for f in file_issues:
+        logging.debug(" -> %s"% f)
+    logging.info("Found %d files to check" % len(files))
+    logging.info("Found %d header files" % len(header_files))
+    logging.info("Found %d classes" % len(classes))
+    logging.info("Found %d member functions" % tot_mems)
+    logging.info("Found %d methods" % tot_meths)
 
 def display_meths_class(classe, frome=False):
     all_meths = classe.funcs + classe.meths

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from logger import SIXAnalyzer_logger
+import logging
 
 ## @brief del $to_find from existing meth
 #  to check the signature with other meths
@@ -12,6 +12,14 @@ def over_meth(meth):
     meth = meth.replace("virtual ", "")
     meth = meth.replace("  ", " ")
     return (meth)
+
+def cli_progress_test(end_val, bar_length=20):
+    for i in xrange(0, end_val):
+        percent = float(i) / end_val
+        hashes = '#' * int(round(percent * bar_length))
+        spaces = ' ' * (bar_length - len(hashes))
+        sys.stdout.write("\rProgression: [{0}] {1}%".format(hashes + spaces, int(round(percent * 100))))
+        sys.stdout.flush()
 
 def is_macro(bar):
     par = 0
@@ -30,7 +38,7 @@ def check_ret_namespace(bar):
         res = ""
     res = bar[:end + 1]
     res += bar[start + 2:]
-    SIXAnalyzer_logger.print_debug("Ret: " + bar + " => " + res)
+    logging.debug("Ret: " + bar + " => " + res)
     return (res)
 
 def check_ret(bar):

@@ -1,9 +1,8 @@
 #!/usr/bin/python
 
-import os, sys, subprocess
+import os, sys, subprocess, logging
 
 from options import SIXAnalyzer_options
-from logger import SIXAnalyzer_logger
 from rules import SIXAnalyzer_rules
 
 class SIXAnalyzer_files():
@@ -21,7 +20,7 @@ class SIXAnalyzer_files():
             if (not os.path.exists(SIXAnalyzer_options.header_folder)):
                 print("Options -I %s doesn't not exist"% SIXAnalyzer_options.header_folder)
                 sys.exit(1)
-            SIXAnalyzer_logger.print_info("Getting Files from header_folder: " + SIXAnalyzer_options.header_folder)
+            logging.info("Getting Files from header_folder: " + SIXAnalyzer_options.header_folder)
             header_files = subprocess.check_output("find " + SIXAnalyzer_options.header_folder + 
                                                 " -type f -readable \( " +
                                                 SIXAnalyzer_rules.get_conf('header_extensions') +
@@ -30,7 +29,7 @@ class SIXAnalyzer_files():
         return (header_files)
 
     def __find_files():
-        SIXAnalyzer_logger.print_info("Stage 1/6: Getting files to parse: %s"% SIXAnalyzer_options.path)
+        logging.info("Stage 1/6: Getting files to parse: %s"% SIXAnalyzer_options.path)
         files = subprocess.check_output("find " + SIXAnalyzer_options.path + " -type f -readable " +
                                         SIXAnalyzer_rules.get_conf('path_extensions') +
                                         " | sort", shell=True).decode().split("\n")

@@ -1,8 +1,6 @@
 #!/usr/bin/python
 
-import os, sys, getopt
-
-from logger import SIXAnalyzer_logger
+import os, sys, getopt, logging
 
 ## @brief print usage
 def usage():
@@ -43,11 +41,11 @@ class SIXAnalyzer_options():
             sys.exit(1)
         for o, a in opts:
             if o == "-v":
+                logging.basicConfig(level=logging.INFO)
                 print("[Running Verbose Mode]")
-                SIXAnalyzer_logger.set_verbose()
             elif o in ("-d"):
+                logging.basicConfig(level=logging.DEBUG)
                 print("[Running Debug Mode]")
-                SIXAnalyzer_logger.set_debug()
             elif o in ("-I"):
                 print("[Using Header Folder] %s"% a)
                 header_folder = a
