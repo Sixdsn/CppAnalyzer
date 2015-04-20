@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import logging
+import logging, sys
 
 ## @brief del $to_find from existing meth
 #  to check the signature with other meths
