@@ -1,8 +1,14 @@
-import reader, fnmatch, sys, os, glob, imp
+import fnmatch, sys, os, glob, imp
 
 from collections import OrderedDict
+from options import SIXAnalyzer_options
+from reader import Reader
 
 import stats
+
+CMDS = [ "pc", "pcf", "pf", "pff", "sc", "sf", "sm", "imp", "reload", "cd" ]
+
+PATH = SIXAnalyzer_options.path
 
 def get_module_path(uri):
     if (uri[0] != '/'):
@@ -14,9 +20,11 @@ def get_module_path(uri):
 
 class SIXAnalyzer_finder():
     def __init__(self, classes):
+        global CMDS
+
         self.modules_loaded = []
         self.classes = sorted(classes, key=lambda classe: classe.name.lower())
-        self.cmd = { 
+        self.cmd =  {
             "pc": [ self.run_pc, " [classname]\t=> Shows Basic Class Intels" ], \
             "pcf": [ self.run_pcf, "[classname]\t=> Shows All Class Intels" ], \
             "pf": [ self.run_pf, " [filename]\t=> Shows Basic Class Intels contained in Filename"], \
@@ -25,8 +33,11 @@ class SIXAnalyzer_finder():
             "sf": [ self.run_sf, " [filename]\t=> Search Files" ], \
             "sm": [ self.run_sm, " [method]\t\t=> Search Methods" ], \
             "imp": [ self.run_imp, " [module]\t\t=> Import Module" ], \
-            "reload": [ self.reload_module, " [module]\t\t=> Reimport Module" ]
+            "reload": [ self.reload_module, " [module]\t\t=> Reimport Module" ], \
+            "cd": [ self.change_directory, "[folder]\t\t=>Change Folder" ]
         }
+        if (len(self.cmd) != len(CMDS)):
+            raise "SIXAnalyzer_finder.cmd != global CMDS"
         self.autoload_modules()
         self.cmd = OrderedDict(sorted(self.cmd.items(), key=lambda kv: kv[0].lower()))
 
@@ -114,6 +125,8 @@ class SIXAnalyzer_finder():
         self.run_pf(fname, full=True)
 
     def run_pf(self, fname, full=False):
+        if (fname[0] != '/'):
+            fname = PATH + fname
         classes = self.get_class_by_filename(fname)
         if not classes:
             print("No results for File: '%s'"% fname)
@@ -143,6 +156,8 @@ class SIXAnalyzer_finder():
             print(classe.name)
 
     def run_sf(self, fname):
+        if (fname[0] != '/'):
+            fname = PATH + fname
         classes = self.get_class_by_filename(fname)
         if not classes:
             print("No results for File: '%s'"% fname)
@@ -161,7 +176,27 @@ class SIXAnalyzer_finder():
                 if fnmatch.fnmatch(Ometh[4].lower(), meths.lower()):
                     print("\t%s: %s FROM: %s"% (classe.name, Ometh[0],  Ometh[5]))
 
+    def change_directory(self, directory=None):
+        global PATH
+
+        if not directory:
+            tmp = SIXAnalyzer_options.path
+        elif directory == "..":
+            if PATH[len(PATH) - 1] == '/':
+                i = -2
+            else:
+                i = -1
+            tmp = "/".join(PATH.split("/")[:i]) + '/'
+        else:
+            if (directory[0] != '/'):
+                tmp = os.path.join(PATH, directory)
+            else:
+                tmp = directory
+        if tmp.startswith(SIXAnalyzer_options.path):
+            PATH = tmp
+
     def run(self):
+        reader = Reader(self.classes)
         while (True):
             try:
                 line = reader.get_line()
@@ -177,7 +212,7 @@ class SIXAnalyzer_finder():
                     print("Unknow Command")
                     continue
                 line = ' '.join(tokens[1:])
-                if (len(line) <= 0):
+                if (len(line) <= 0 and cmd != "cd"):
                     print("Command '%s' needs a parameter"% cmd)
                     continue
                 self.cmd[cmd][0](line)
