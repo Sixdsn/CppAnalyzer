@@ -55,8 +55,19 @@ class Completer(object):
     def _complete_classes(self, args):
         return [ f for f in self.get_classes() if f.startswith(args[-1]) ]
 
-    # def _complete_classes(args):
-    #     return [ f for f in SIXAnalyzer_files.get_files() if f.startswith(finder.PATH)]
+    def _complete_sm(self, meths):
+        res = []
+        meth_arg = meths[-1]
+        for classe in self.classes:
+            all_meths = classe.funcs + classe.meths
+            for meth in all_meths:
+                if len(meth_arg) == 0 or meth[4].lower().startswith(meth_arg.lower()):
+                    res.append(meth[4])
+            all_Omeths = classe.Ofuncs + classe.Omeths
+            for Ometh in all_Omeths:
+                if len(meth_arg) == 0 or Ometh[4].lower().startswith(meth_arg.lower()):
+                    res.append(Ometh[4])
+        return res
 
     #class
     def complete_pc(self, args):
@@ -76,7 +87,7 @@ class Completer(object):
 
     #meths
     def complete_sm(self, args):
-        pass
+        return self._complete_sm(args)
 
     #module
     def complete_imp(self, args):
