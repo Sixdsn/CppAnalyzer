@@ -61,11 +61,11 @@ class Completer(object):
         for classe in self.classes:
             all_meths = classe.funcs + classe.meths
             for meth in all_meths:
-                if len(meth_arg) == 0 or meth[4].lower().startswith(meth_arg.lower()):
+                if meth[4].lower().startswith(meth_arg.lower()):
                     res.append(meth[4])
             all_Omeths = classe.Ofuncs + classe.Omeths
             for Ometh in all_Omeths:
-                if len(meth_arg) == 0 or Ometh[4].lower().startswith(meth_arg.lower()):
+                if Ometh[4].lower().startswith(meth_arg.lower()):
                     res.append(Ometh[4])
         return res
 
