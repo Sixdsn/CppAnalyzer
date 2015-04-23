@@ -25,16 +25,16 @@ class SIXAnalyzer_finder():
         self.modules_loaded = []
         self.classes = sorted(classes, key=lambda classe: classe.name.lower())
         self.cmd =  {
-            "pc": [ self.run_pc, " [classname]\t=> Shows Basic Class Intels" ], \
-            "pcf": [ self.run_pcf, "[classname]\t=> Shows All Class Intels" ], \
-            "pf": [ self.run_pf, " [filename]\t=> Shows Basic Class Intels contained in Filename"], \
-            "pff": [ self.run_pff, "[filename]\t=> Shows All Class Intels contained in Filename"], \
-            "sc": [ self.run_sc, " [classname]\t=> Search Class" ], \
-            "sf": [ self.run_sf, " [filename]\t=> Search Files" ], \
-            "sm": [ self.run_sm, " [method]\t\t=> Search Methods" ], \
-            "imp": [ self.run_imp, " [module]\t\t=> Import Module" ], \
-            "reload": [ self.reload_module, " [module]\t\t=> Reimport Module" ], \
-            "cd": [ self.change_directory, "[folder]\t\t=>Change Folder" ]
+            "pc": [ self.run_pc, " [classname]\t=> Shows Basic Class Intels", True ], \
+            "pcf": [ self.run_pcf, " [classname]\t=> Shows All Class Intels", True ], \
+            "pf": [ self.run_pf, " [filename]\t=> Shows Basic Class Intels contained in Filename", True ], \
+            "pff": [ self.run_pff, " [filename]\t=> Shows All Class Intels contained in Filename", True ], \
+            "sc": [ self.run_sc, " [classname]\t=> Search Class", True ], \
+            "sf": [ self.run_sf, " [filename]\t=> Search Files", True ], \
+            "sm": [ self.run_sm, " [method]\t\t=> Search Methods", True ], \
+            "imp": [ self.run_imp, " [module]\t\t=> Import Module", True ], \
+            "reload": [ self.run_reload, " [module]\t\t=> Reimport Module", True ], \
+            "cd": [ self.run_cd, " [folder]\t\t=>Change Folder", False ]
         }
         if (len(self.cmd) != len(CMDS)):
             raise "SIXAnalyzer_finder.cmd != global CMDS"
@@ -61,7 +61,7 @@ class SIXAnalyzer_finder():
         else:
             print("Modules '%s' Already Loaded"% mname)
 
-    def reload_module(self, modname):
+    def run_reload(self, modname):
         mname, no_ext = get_module_path(modname)
         self.modules_loaded.remove(no_ext)
         mod = self.import_module(modname)
@@ -176,7 +176,7 @@ class SIXAnalyzer_finder():
                 if fnmatch.fnmatch(Ometh[4].lower(), meths.lower()):
                     print("\t%s: %s FROM: %s"% (classe.name, Ometh[0],  Ometh[5]))
 
-    def change_directory(self, directory=None):
+    def run_cd(self, directory=None):
         global PATH
 
         if not directory:
@@ -208,14 +208,15 @@ class SIXAnalyzer_finder():
                 line = reader.check_line(line)
                 tokens = line.split()
                 cmd = tokens[0]
-                if (cmd not in self.cmd):
+                line = ' '.join(tokens[1:])
+                if cmd in self.cmd:
+                    if (len(line) <= 0 and self.cmd[cmd][2]):
+                        print("Command '%s' needs a parameter"% cmd)
+                        continue
+                    self.cmd[cmd][0](line)
+                else:
                     print("Unknow Command")
                     continue
-                line = ' '.join(tokens[1:])
-                if (len(line) <= 0 and cmd != "cd"):
-                    print("Command '%s' needs a parameter"% cmd)
-                    continue
-                self.cmd[cmd][0](line)
             except SystemExit as e:
                 sys.exit(e)
             #removed for debug

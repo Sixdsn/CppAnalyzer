@@ -11,14 +11,14 @@ class Completer(object):
     def get_files(self):
         res = []
         for elem in self.classes:
-            if elem.filename not in res:
+            if elem.filename not in res and elem.filename.startswith(finder.PATH):
                 res.append(elem.filename)
         return res
 
     def get_classes(self):
         res = []
         for elem in self.classes:
-            if elem.name not in res:
+            if elem.name not in res and elem.filename.startswith(finder.PATH):
                 res.append(elem.name)
         return res
 
