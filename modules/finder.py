@@ -156,6 +156,7 @@ class SIXAnalyzer_finder():
             print(classe.name)
 
     def run_sf(self, fname):
+        res = []
         if (fname[0] != '/'):
             fname = PATH + fname
         classes = self.get_class_by_filename(fname)
@@ -163,7 +164,9 @@ class SIXAnalyzer_finder():
             print("No results for File: '%s'"% fname)
             return
         for classe in classes:
-            print(classe.filename)
+            if classe.filename not in res:
+                res.append(classe.filename)
+                print(classe.filename)
 
     def run_sm(self, meths):
         for classe in self.classes:
