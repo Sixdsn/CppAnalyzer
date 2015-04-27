@@ -43,18 +43,18 @@ class SIXAnalyzer_finder():
 
     def import_module(self, uri):
         mname, no_ext = get_module_path(uri)
-        if no_ext not in self.modules_loaded:
+        if uri not in self.modules_loaded:
             if os.path.exists(no_ext + '.py'):
                 try:
                     mod = imp.load_source(mname, no_ext + '.py').init()
-                    self.modules_loaded.append(no_ext)
+                    self.modules_loaded.append(uri)
                     return mod
                 except:
                     pass
             elif os.path.exists(no_ext + '.pyc'):
                 try:
                     mod = imp.load_compiled(mname, no_ext + '.pyc').init()
-                    self.modules_loaded.append(no_ext)
+                    self.modules_loaded.append(uri)
                     return mod
                 except:
                     pass
@@ -63,23 +63,26 @@ class SIXAnalyzer_finder():
 
     def run_reload(self, modname):
         mname, no_ext = get_module_path(modname)
-        self.modules_loaded.remove(no_ext)
+        self.modules_loaded.remove(modname)
         mod = self.import_module(modname)
         if (not mod):
             return
         for cmd, elems in mod.iteritems():
             if (cmd in self.cmd):
                 self.cmd.pop(cmd)
-        print("Module Loaded: %s"% modname)
+                CMDS.remove(cmd)
+        print("Module ReLoaded: %s"% modname)
         for cmd, elems in mod.iteritems():
             print("\t$>%s %s"% (cmd, elems[1]))
+            CMDS.append(cmd)
         self.cmd.update(mod)
 
     def autoload_modules(self):
         for fname in glob.glob("services/*.py"):
             self.run_imp(fname)
         for fname in glob.glob("services/*.pyc"):
-            self.run_imp(fname)
+            if fname[:-1] not in self.modules_loaded:
+                self.run_imp(fname)
 
     def get_class_by_name(self, classname):
         res = [ elem for elem in self.classes if fnmatch.fnmatch(elem.name.lower(), classname.lower()) ]
@@ -119,6 +122,7 @@ class SIXAnalyzer_finder():
         print("Module Loaded: %s"% module)
         for cmd, elems in mod.iteritems():
             print("\t$>%s %s"% (cmd, elems[1]))
+            CMDS.append(cmd)
         self.cmd.update(mod)
 
     def run_pff(self, fname):
@@ -199,7 +203,7 @@ class SIXAnalyzer_finder():
             PATH = tmp
 
     def run(self):
-        reader = Reader(self.classes)
+        reader = Reader(self)
         while (True):
             try:
                 line = reader.get_line()

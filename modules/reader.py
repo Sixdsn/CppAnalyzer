@@ -5,8 +5,9 @@ import finder
 RE_SPACE = re.compile('.*\s+$', re.M)
 
 class Completer(object):
-    def __init__(self, classes):
-        self.classes = classes
+    def __init__(self, finder):
+        self.classes = finder.classes
+        self.modules_loaded = finder.modules_loaded
 
     def get_files(self):
         res = []
@@ -44,11 +45,6 @@ class Completer(object):
             return [os.path.join(path, p) for p in self._listdir(path)]
         return [path + ' ']
 
-    def complete_cd(self, args):
-        if not args or args[0] == '':
-            return self._complete_cd(finder.PATH)
-        return self._complete_cd(args[-1])
-
     def _complete_files(self, args):
         return [ f.split(finder.PATH)[1] for f in self.get_files() if f.startswith(finder.PATH + args[-1]) ]
 
@@ -68,6 +64,11 @@ class Completer(object):
                 if Ometh[4].lower().startswith(meth_arg.lower()):
                     res.append(Ometh[4])
         return res
+
+    def complete_cd(self, args):
+        if not args or args[0] == '':
+            return self._complete_cd(finder.PATH)
+        return self._complete_cd(args[-1])
 
     #class
     def complete_pc(self, args):
@@ -92,8 +93,9 @@ class Completer(object):
     #module
     def complete_imp(self, args):
         pass
+
     def complete_reload(self, args):
-        pass
+        return [ f for f in self.modules_loaded if f.startswith(args[-1]) ]
 
     def complete(self, text, state):
         buffer = readline.get_line_buffer()
