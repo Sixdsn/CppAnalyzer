@@ -114,6 +114,7 @@ class SIXAnalyzer_finder():
     def run_imp(self, module):
         mod = self.import_module(module)
         if (not mod):
+            print("Failed to import Module: %s"% module)
             return
         for cmd, elems in mod.iteritems():
             if (cmd in self.cmd):

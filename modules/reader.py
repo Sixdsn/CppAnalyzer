@@ -1,4 +1,4 @@
-import sys, os, re, readline
+import sys, os, re, readline, fnmatch, glob
 
 import finder
 
@@ -92,7 +92,23 @@ class Completer(object):
 
     #module
     def complete_imp(self, args):
-        pass
+        res = []
+        if args[-1]:
+            paths = [ f for f in glob.glob(args[-1] + "*") if os.path.isdir(f) or os.path.isdir(os.path.basename(f)) ]
+            if not paths:
+                paths = [ '/'.join(args[-1].split('/')[:-1]) ]
+        else:
+            paths = [ '.' ]
+        for path in paths:
+            for root, dirnames, filenames in os.walk(path):
+                for filename in fnmatch.filter(filenames, '*.py[c]'):
+                    fname = os.path.join(root, filename)
+                    if args:
+                        if fname.startswith(args[-1]):
+                            res.append(fname)
+                    else:
+                        res.append(fname)
+        return res
 
     def complete_reload(self, args):
         return [ f for f in self.modules_loaded if f.startswith(args[-1]) ]
