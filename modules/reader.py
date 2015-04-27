@@ -92,22 +92,28 @@ class Completer(object):
 
     #module
     def complete_imp(self, args):
-        res = []
-        if args[-1]:
-            paths = [ f for f in glob.glob(args[-1] + "*") if os.path.isdir(f) or os.path.isdir(os.path.basename(f)) ]
-            if not paths:
-                paths = [ '/'.join(args[-1].split('/')[:-1]) ]
-        else:
-            paths = [ '.' ]
-        for path in paths:
-            for root, dirnames, filenames in os.walk(path):
-                for filename in fnmatch.filter(filenames, '*.py[c]'):
-                    fname = os.path.join(root, filename)
-                    if args:
-                        if fname.startswith(args[-1]):
-                            res.append(fname)
-                    else:
-                        res.append(fname)
+        arg = args[-1]
+        path = './'
+        if arg:
+            if os.path.isdir(arg):
+                path = arg
+            else:
+                path = os.path.dirname(arg)
+        if not len(path) or path == '.':
+            path = "./"
+        if path[-1] != '/':
+            path += '/'
+        files = [ path + f for f in os.listdir(path) ]
+        filenames = fnmatch.filter(files, '*.py')
+        filenames += fnmatch.filter(files, '*.pyc')
+        res = [ f + '/' for f in files if os.path.isdir(f) and (f.startswith(arg) or f.startswith('./' + arg))]
+        for filename in filenames:
+            if arg:
+                fname = filename
+                if fname.startswith(arg) or fname.startswith('./' + arg):
+                    res.append(fname)
+            else:
+                res.append(filename)
         return res
 
     def complete_reload(self, args):
