@@ -20,7 +20,8 @@ class SIXAnalyzer_rules():
     namespace = 'DEFAULT'
     config.read(cfg_full_path)
     print("PATH: %s"% cfg_full_path)
-    to_ignore = [ 
+    to_ignore = [
+        "final",
         "BASE_DECL_ALIGNED_MEMORY()",
         "BASE_EXPORT",
         "BEGIN_BLUETOOTH_NAMESPACE",
