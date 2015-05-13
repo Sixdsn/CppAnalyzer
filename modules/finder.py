@@ -1,12 +1,14 @@
 import fnmatch, sys, os, glob, imp
 
+import pygraphviz as pgv
+
 from collections import OrderedDict
 from options import SIXAnalyzer_options
 from reader import Reader
 
 import stats
 
-CMDS = [ "pc", "pcf", "pf", "pff", "sc", "sf", "sm", "imp", "reload", "cd" ]
+CMDS = [ "pc", "pcf", "pf", "pff", "sc", "sf", "sm", "imp", "reload", "cd", "graph" ]
 
 PATH = SIXAnalyzer_options.path
 
@@ -34,7 +36,8 @@ class SIXAnalyzer_finder():
             "sm": [ self.run_sm, " [method]\t\t=> Search Methods", True ], \
             "imp": [ self.run_imp, " [module]\t\t=> Import Module", True ], \
             "reload": [ self.run_reload, " [module]\t\t=> Reimport Module", True ], \
-            "cd": [ self.run_cd, " [folder]\t\t=>Change Folder", False ]
+            "cd": [ self.run_cd, " [folder]\t\t=>Change Folder", False ], \
+            "graph": [ self.run_graph, " [filename]\t=> Generate Classes Graph", True ]
         }
         if (len(self.cmd) != len(CMDS)):
             raise "SIXAnalyzer_finder.cmd != global CMDS"
@@ -202,6 +205,22 @@ class SIXAnalyzer_finder():
                 tmp = directory
         if tmp.startswith(SIXAnalyzer_options.path):
             PATH = tmp
+
+    def run_graph(self, fname):
+        try:
+            A = pgv.AGraph(directed=True, strict=True, rankdir='LR')
+
+            for classe in self.classes:
+                if classe.filename.startswith(PATH):
+                    for inh in classe.orig_inherits:
+                        if (inh != classe.name):
+                            A.add_edge(inh, classe.name)
+            A.write(fname + '.dot')
+            B = pgv.AGraph(fname + '.dot')
+            B.layout('dot')
+            B.draw(fname + '.png')
+        except:
+            print("Unable to generate %s graph"% fname)
 
     def run(self):
         reader = Reader(self)

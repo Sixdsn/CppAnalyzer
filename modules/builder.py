@@ -155,6 +155,7 @@ class CppClass():
     def __init__(self, filename):
         self.name = ""
         self.filename = filename
+        self.orig_inherits = []
         self.inherits = []
         self.namespace = ""
         self.funcs = []
@@ -173,8 +174,9 @@ class CppClass():
 
     def set_inherits(self, classe):
         for inherit in classe["inherits"]:
-            if (inherit['class'] != self.name):
+            if (inherit['class'] != self.name and inherit['class'] not in self.inherits):
                 self.inherits.append(inherit['class'])
+                self.orig_inherits.append(inherit['class'])
                 logging.debug("Inherits: %s"% inherit['class'])
 
     def append_ometh(self, meth):
