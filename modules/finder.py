@@ -208,8 +208,11 @@ class SIXAnalyzer_finder():
 
     def run_graph(self, fname):
         try:
-            A = pgv.AGraph(directed=True, strict=True, rankdir='LR')
-
+            A = pgv.AGraph(directed=True, strict=True, rankdir='LR', ranksep='0.1', concentrate=True)
+            A.node_attr['style'] ='filled'
+            A.node_attr['color'] = 'green'
+            A.node_attr['fontcolor']='black'
+            A.edge_attr.update(len='0.2',color='blue')
             for classe in self.classes:
                 if classe.filename.startswith(PATH):
                     for inh in classe.orig_inherits:
@@ -217,7 +220,7 @@ class SIXAnalyzer_finder():
                             A.add_edge(inh, classe.name)
             A.write(fname + '.dot')
             B = pgv.AGraph(fname + '.dot')
-            B.layout('dot')
+            B.layout(prog='dot')
             B.draw(fname + '.png')
         except:
             print("Unable to generate %s graph"% fname)
