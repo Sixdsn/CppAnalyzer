@@ -35,7 +35,7 @@ class SIXAnalyzer_finder():
             "sf": [ self.run_sf, " [filename]\t=> Search Files", True ], \
             "sm": [ self.run_sm, " [method]\t\t=> Search Methods", True ], \
             "imp": [ self.run_imp, " [module]\t\t=> Import Module", True ], \
-            "reload": [ self.run_reload, " [module]\t\t=> Reimport Module", True ], \
+            "reload": [ self.run_reload, " [module]\t=> Reimport Module", True ], \
             "cd": [ self.run_cd, " [folder]\t\t=>Change Folder", False ], \
             "graph": [ self.run_graph, " [filename]\t=> Generate Classes Graph", True ]
         }
