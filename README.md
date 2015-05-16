@@ -14,6 +14,12 @@ You just need to install it
 $>pip install cppheaderparser
 ```
 
+Requirements (for graph export):
+```
+$> apt-get install libgraphviz-dev python-dev
+$> pip install pygraphviz
+```
+
 CppAnalyzer is a script based on the [MOZ_OVERRIDE](https://github.com/Sixdsn/MOZ_OVERRIDE) tool
 I developped for Mozilla wich recreates the whole heritage tree for all classes in mozilla-central.
 
@@ -42,16 +48,22 @@ CLI Commands:
 All parameters are interepreted as regex
 But use '*' carefully :)
 
-$> imp    [module]    => Import Module
-$> pc     [classname] => Shows Basic Class Intels
-$> pcf    [classname] => Shows All Class Intels
-$> pf     [filename]  => Shows Basic Class Intels contained in Filename
-$> pff    [filename]  => Shows All Class Intels contained in Filename
-$> reload [module]    => Reimport Module
-$> sc     [classname] => Search Class
-$> sf     [filename]  => Search Files
-$> sm     [method]    => Search Methods
+$>cd	 [folder]     =>Change Folder
+$>graph	 [filename]   => Generate Classes Graph
+$>imp	 [module]     => Import Module
+$>pc	 [classname]  => Shows Basic Class Intels
+$>pcf	 [classname]  => Shows All Class Intels
+$>pf	 [filename]   => Shows Basic Class Intels contained in Filename
+$>pff	 [filename]   => Shows All Class Intels contained in Filename
+$>reload [module]     => Reimport Module
+$>sc	 [classname]  => Search Class
+$>sf	 [filename]   => Search Files
+$>six	 [Message]    => Print Message
+$>sm	 [method]     => Search Methods
 ```
+
+Modules:
+
 CppAnalyzer will try to load all modules from the services/ folder at startup.
 
 You can add any other personnal module by using the "imp" command and giving it the module path (absolute or relative)
@@ -62,4 +74,3 @@ There is an example in services/six.py
 
 
 Of course feel free to open a issue if you want a new command/feature or if you have a question
-
