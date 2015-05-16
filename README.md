@@ -16,7 +16,7 @@ $>pip install cppheaderparser
 
 Requirements (for graph export):
 ```
-$> apt-get install libgraphviz-dev python-dev
+$> apt-get install libgraphviz-dev python-dev graphviz
 $> pip install pygraphviz
 ```
 
@@ -72,5 +72,14 @@ Module MUST have a init() function that return a dict containing the "Command" a
 
 There is an example in services/six.py
 
+
+Graph Export:
+```
+Analyze$> graph /tmp/example
+```
+
+Will generate the hierarchy graph for classes inside CWD in /tmp/example.png (/tmp/example.dot for the original dot file)
+
+![Graph Export Example](http://sixdsn.github.io/images/CppAnalyser_Example.png)
 
 Of course feel free to open a issue if you want a new command/feature or if you have a question
