@@ -227,8 +227,14 @@ class SIXAnalyzer_finder():
             A.node_attr['color'] = 'green'
             A.node_attr['fontcolor']='black'
             A.edge_attr.update(len='0.2',color='blue')
-            for classe in self.classes:
+            classes = self.classes
+            if (len(args) > 1):
+                classes = []
+                for arg in args:
+                    classes += [classe for classe in self.classes if classe.name == arg]
+            for classe in classes:
                 if classe.filename.startswith(PATH):
+                    A.add_node(classe.name)
                     for inh in classe.orig_inherits:
                         if (inh != classe.name):
                             A.add_edge(inh, classe.name)

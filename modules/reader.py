@@ -65,6 +65,13 @@ class Completer(object):
                     res.append(Ometh[4])
         return res
 
+    def complete_graph(self, args):
+        if not args or args[0] == '':
+            return self._complete_cd(finder.PATH)
+        if len(args) == 1:
+            return self._complete_cd(args[0])
+        return self._complete_classes(args[1:])
+
     def complete_cd(self, args):
         if not args or args[0] == '':
             return self._complete_cd(finder.PATH)
