@@ -64,28 +64,31 @@ class SIXAnalyzer_finder():
         else:
             print("Modules '%s' Already Loaded"% mname)
 
-    def run_reload(self, modname):
-        mname, no_ext = get_module_path(modname)
-        self.modules_loaded.remove(modname)
-        mod = self.import_module(modname)
-        if (not mod):
-            return
-        for cmd, elems in mod.iteritems():
-            if (cmd in self.cmd):
-                self.cmd.pop(cmd)
-                CMDS.remove(cmd)
-        print("Module ReLoaded: %s"% modname)
-        for cmd, elems in mod.iteritems():
-            print("\t$>%s %s"% (cmd, elems[1]))
-            CMDS.append(cmd)
-        self.cmd.update(mod)
+    def run_reload(self, args):
+        for modname in args:
+            mname, no_ext = get_module_path(modname)
+            self.modules_loaded.remove(modname)
+            mod = self.import_module(modname)
+            if (not mod):
+                return
+            for cmd, elems in mod.iteritems():
+                if (cmd in self.cmd):
+                    self.cmd.pop(cmd)
+                    CMDS.remove(cmd)
+            print("Module ReLoaded: %s"% modname)
+            for cmd, elems in mod.iteritems():
+                print("\t$>%s %s"% (cmd, elems[1]))
+                CMDS.append(cmd)
+            self.cmd.update(mod)
 
     def autoload_modules(self):
+        res = []
         for fname in glob.glob("services/*.py"):
-            self.run_imp(fname)
+            res.append(fname)
         for fname in glob.glob("services/*.pyc"):
-            if fname[:-1] not in self.modules_loaded:
-                self.run_imp(fname)
+            if fname[:-1] not in res:
+                res.append(fname)
+        self.run_imp(res)
 
     def get_class_by_name(self, classname):
         res = [ elem for elem in self.classes if fnmatch.fnmatch(elem.name.lower(), classname.lower()) ]
@@ -114,82 +117,92 @@ class SIXAnalyzer_finder():
         for cmd, elems in self.cmd.iteritems():
             print("\t$>%s %s"% (cmd, elems[1]))
 
-    def run_imp(self, module):
-        mod = self.import_module(module)
-        if (not mod):
-            print("Failed to import Module: %s"% module)
-            return
-        for cmd, elems in mod.iteritems():
-            if (cmd in self.cmd):
-                print("Command: '%s' is already defined"% cmd)
+    def run_imp(self, args):
+        for module in args:
+            mod = self.import_module(module)
+            if (not mod):
+                print("Failed to import Module: %s"% module)
                 return
-        print("Module Loaded: %s"% module)
-        for cmd, elems in mod.iteritems():
-            print("\t$>%s %s"% (cmd, elems[1]))
-            CMDS.append(cmd)
-        self.cmd.update(mod)
+            for cmd, elems in mod.iteritems():
+                if (cmd in self.cmd):
+                    print("Command: '%s' is already defined"% cmd)
+                    return
+            print("Module Loaded: %s"% module)
+            for cmd, elems in mod.iteritems():
+                print("\t$>%s %s"% (cmd, elems[1]))
+                CMDS.append(cmd)
+            self.cmd.update(mod)
 
-    def run_pff(self, fname):
-        self.run_pf(fname, full=True)
+    def run_pff(self, args):
+        self.run_pf(args, full=True)
 
-    def run_pf(self, fname, full=False):
-        if (fname[0] != '/'):
-            fname = PATH + fname
-        classes = self.get_class_by_filename(fname)
-        if not classes:
-            print("No results for File: '%s'"% fname)
-            return
-        for classe in classes:
-            child_classes = self.get_child_class([ classe ])
-            stats.display_class(classe, full, child_classes)
+    def run_pf(self, args, full=False):
+        for fname in args:
+            if (fname[0] != '/'):
+                fname = PATH + fname
+            classes = self.get_class_by_filename(fname)
+            if not classes:
+                print("No results for File: '%s'"% fname)
+                return
+            for classe in classes:
+                child_classes = self.get_child_class([ classe ])
+                stats.display_class(classe, full, child_classes)
 
-    def run_pcf(self, classe):
-        self.run_pc(classe, full=True)
+    def run_pcf(self, args):
+        self.run_pc(args, full=True)
 
-    def run_pc(self, classe, full=False):
-        classes = self.get_class_by_name(classe)
-        if not classes:
-            print("No results for Class: '%s'"% classe)
-            return
-        for classe in classes:
-            child_classes = self.get_child_class([ classe ])
-            stats.display_class(classe, full, child_classes)
+    def run_pc(self, args, full=False):
+        for classe in args:
+            classes = self.get_class_by_name(classe)
+            if not classes:
+                print("No results for Class: '%s'"% classe)
+                return
+            for classe in classes:
+                child_classes = self.get_child_class([ classe ])
+                stats.display_class(classe, full, child_classes)
 
-    def run_sc(self, classe):
-        classes = self.get_class_by_name(classe)
-        if not classes:
-            print("No results for Class: '%s'"% classe)
-            return
-        for classe in classes:
-            print(classe.name)
+    def run_sc(self, args):
+        for classe in args:
+            classes = self.get_class_by_name(classe)
+            if not classes:
+                print("No results for Class: '%s'"% classe)
+                return
+            for classe in classes:
+                print(classe.name)
 
-    def run_sf(self, fname):
+    def run_sf(self, args):
         res = []
-        if (fname[0] != '/'):
-            fname = PATH + fname
-        classes = self.get_class_by_filename(fname)
-        if not classes:
-            print("No results for File: '%s'"% fname)
-            return
-        for classe in classes:
-            if classe.filename not in res:
-                res.append(classe.filename)
-                print(classe.filename)
+        for fname in args:
+            if (fname[0] != '/'):
+                fname = PATH + fname
+            classes = self.get_class_by_filename(fname)
+            if not classes:
+                print("No results for File: '%s'"% fname)
+                return
+            for classe in classes:
+                if classe.filename not in res:
+                    res.append(classe.filename)
+                    print(classe.filename)
 
-    def run_sm(self, meths):
+    def run_sm(self, args):
         for classe in self.classes:
             all_meths = classe.funcs + classe.meths
             for meth in all_meths:
-                if fnmatch.fnmatch(meth[4].lower(), meths.lower()):
-                    print("\t%s: %s"% (classe.name, meth[0]))
+                for meth_arg in args:
+                    if fnmatch.fnmatch(meth[4].lower(), meth_arg.lower()):
+                        print("\t%s: %s"% (classe.name, meth[0]))
             all_Omeths = classe.Ofuncs + classe.Omeths
             for Ometh in all_Omeths:
-                if fnmatch.fnmatch(Ometh[4].lower(), meths.lower()):
-                    print("\t%s: %s FROM: %s"% (classe.name, Ometh[0],  Ometh[5]))
+                for meth_arg in args:
+                    if fnmatch.fnmatch(Ometh[4].lower(), meth_arg.lower()):
+                        print("\t%s: %s FROM: %s"% (classe.name, Ometh[0],  Ometh[5]))
 
-    def run_cd(self, directory=None):
+    def run_cd(self, args):
         global PATH
 
+        directory = None
+        if len(args):
+            directory = args[0]
         if not directory:
             tmp = SIXAnalyzer_options.path
         elif directory == "..":
@@ -206,7 +219,8 @@ class SIXAnalyzer_finder():
         if tmp.startswith(SIXAnalyzer_options.path):
             PATH = tmp
 
-    def run_graph(self, fname):
+    def run_graph(self, args):
+        fname = args[0]
         try:
             A = pgv.AGraph(directed=True, strict=True, rankdir='LR', ranksep='0.1', concentrate=True)
             A.node_attr['style'] ='filled'
@@ -243,7 +257,7 @@ class SIXAnalyzer_finder():
                     if (len(line) <= 0 and self.cmd[cmd][2]):
                         print("Command '%s' needs a parameter"% cmd)
                         continue
-                    self.cmd[cmd][0](line)
+                    self.cmd[cmd][0](tokens[1:])
                 else:
                     print("Unknow Command")
                     continue
