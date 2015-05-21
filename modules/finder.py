@@ -27,17 +27,17 @@ class SIXAnalyzer_finder():
         self.modules_loaded = []
         self.classes = sorted(classes, key=lambda classe: classe.name.lower())
         self.cmd =  {
-            "pc": [ self.run_pc, " [classname]\t=> Shows Basic Class Intels", True ], \
-            "pcf": [ self.run_pcf, " [classname]\t=> Shows All Class Intels", True ], \
-            "pf": [ self.run_pf, " [filename]\t=> Shows Basic Class Intels contained in Filename", True ], \
-            "pff": [ self.run_pff, " [filename]\t=> Shows All Class Intels contained in Filename", True ], \
-            "sc": [ self.run_sc, " [classname]\t=> Search Class", True ], \
-            "sf": [ self.run_sf, " [filename]\t=> Search Files", True ], \
-            "sm": [ self.run_sm, " [method]\t\t=> Search Methods", True ], \
-            "imp": [ self.run_imp, " [module]\t\t=> Import Module", True ], \
-            "reload": [ self.run_reload, " [module]\t=> Reimport Module", True ], \
-            "cd": [ self.run_cd, " [folder]\t\t=>Change Folder", False ], \
-            "graph": [ self.run_graph, " [filename]\t=> Generate Classes Graph", True ]
+            "pc": [ self.run_pc, " [classname]+\t=> Shows Basic Class Intels", True ], \
+            "pcf": [ self.run_pcf, " [classname]+\t=> Shows All Class Intels", True ], \
+            "pf": [ self.run_pf, " [filename]+\t=> Shows Basic Class Intels contained in Filename", True ], \
+            "pff": [ self.run_pff, " [filename]+\t=> Shows All Class Intels contained in Filename", True ], \
+            "sc": [ self.run_sc, " [classname]+\t=> Search Class", True ], \
+            "sf": [ self.run_sf, " [filename]+\t=> Search Files", True ], \
+            "sm": [ self.run_sm, " [method]+\t=> Search Methods", True ], \
+            "imp": [ self.run_imp, " [module]+\t=> Import Module", True ], \
+            "reload": [ self.run_reload, " [module]+\t=> Reimport Module", True ], \
+            "cd": [ self.run_cd, " [folder]\t=> Change Folder", False ], \
+            "graph": [ self.run_graph, " [filename] [classname]*\t=> Generate Classes Graph", True ]
         }
         if (len(self.cmd) != len(CMDS)):
             raise "SIXAnalyzer_finder.cmd != global CMDS"
@@ -115,7 +115,7 @@ class SIXAnalyzer_finder():
         print("But use '*' carefully :)")
         print("")
         for cmd, elems in self.cmd.iteritems():
-            print("\t$>%s %s"% (cmd, elems[1]))
+            print("    $>%s %s"% (cmd, elems[1])).expandtabs(40)
 
     def run_imp(self, args):
         for module in args:
