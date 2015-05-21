@@ -1,6 +1,11 @@
 CppAnalyser
 ===========
 
+CppAnalyzer is a script based on the [MOZ_OVERRIDE](https://github.com/Sixdsn/MOZ_OVERRIDE) tool
+I developped for Mozilla wich recreates the whole heritage tree for all classes in mozilla-central.
+
+It can be used on any folder containing C++ Code.
+
 Parse your CPP class definitions and analyse it
 
 This CLI Tool is using the CppHeaderParser Module available here:
@@ -19,11 +24,6 @@ Requirements (for graph export):
 $> apt-get install libgraphviz-dev python-dev graphviz
 $> pip install pygraphviz
 ```
-
-CppAnalyzer is a script based on the [MOZ_OVERRIDE](https://github.com/Sixdsn/MOZ_OVERRIDE) tool
-I developped for Mozilla wich recreates the whole heritage tree for all classes in mozilla-central.
-
-It can be used on any folder containing C++ Code.
 
 Usage:
 
@@ -48,19 +48,24 @@ CLI Commands:
 All parameters are interepreted as regex
 But use '*' carefully :)
 
-$>cd	 [folder]     =>Change Folder
-$>graph	 [filename]   => Generate Classes Graph
-$>imp	 [module]     => Import Module
-$>pc	 [classname]  => Shows Basic Class Intels
-$>pcf	 [classname]  => Shows All Class Intels
-$>pf	 [filename]   => Shows Basic Class Intels contained in Filename
-$>pff	 [filename]   => Shows All Class Intels contained in Filename
-$>reload [module]     => Reimport Module
-$>sc	 [classname]  => Search Class
-$>sf	 [filename]   => Search Files
-$>six	 [Message]    => Print Message
-$>sm	 [method]     => Search Methods
+$>cd	 [folder]			=> Change Folder
+$>graph	 [filename] [classename]*  	=> Generate Classes Graph
+$>imp	 [module]+     			=> Import Module
+$>pc	 [classname]+  			=> Shows Basic Class Intels
+$>pcf	 [classname]+  			=> Shows All Class Intels
+$>pf	 [filename]+   			=> Shows Basic Class Intels contained in Filename
+$>pff	 [filename]+   			=> Shows All Class Intels contained in Filename
+$>reload [module]+     			=> Reimport Module
+$>sc	 [classname]+  			=> Search Class
+$>sf	 [filename]+   			=> Search Files
+$>sm	 [method]+     			=> Search Methods
 ```
+
+For each command you are able to specify multiple parameters of the same type classname/filename/module.
+
+The graph command can be used to graph a specific set of classes or the whole current working directory.
+
+Use `cd` command to move inside the main directory and specify the scope of the others commands.
 
 Modules:
 
