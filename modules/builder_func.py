@@ -13,13 +13,12 @@ def over_meth(meth):
     meth = meth.replace("  ", " ")
     return (meth)
 
-def cli_progress_test(end_val, bar_length=20):
-    for i in xrange(0, end_val):
-        percent = float(i) / end_val
-        hashes = '#' * int(round(percent * bar_length))
-        spaces = ' ' * (bar_length - len(hashes))
-        sys.stdout.write("\rProgression: [{0}] {1}%".format(hashes + spaces, int(round(percent * 100))))
-        sys.stdout.flush()
+def cli_progress_test(current, end_val, bar_length=20):
+    percent = float(current) / end_val
+    hashes = '#' * int(round(percent * bar_length))
+    spaces = ' ' * (bar_length - len(hashes))
+    sys.stdout.write("\rProgression: [{0}] {1}%".format(hashes + spaces, int(round(percent * 100))))
+    sys.stdout.flush()
 
 def is_macro(bar):
     par = 0

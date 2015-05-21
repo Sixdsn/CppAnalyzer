@@ -200,7 +200,7 @@ def manage_typedefs(all_classes, liste):
                         logging.debug(cppclass.name + " typedef inherits: " + cppclass.typedefs[name])
                         break
     class_cpt.value += len(liste)
-    builder_func.cli_progress_test(int(class_cpt.value * 100 / len(all_classes)))
+    builder_func.cli_progress_test(class_cpt.value, len(all_classes))
     return (liste)
 
 def build_meth(typeid_func):
@@ -291,6 +291,6 @@ def do_parse(files, nb_files):
             logging.debug(cppHeader.classes)
         for HeaderClass in cppHeader.classes:
             classes.append(gen_class(filename, cppHeader, HeaderClass))
-    builder_func.cli_progress_test(int(file_cpt.value * 100 / nb_files))
+    builder_func.cli_progress_test(file_cpt.value, nb_files)
     dev_null.close()
     return (classes)
