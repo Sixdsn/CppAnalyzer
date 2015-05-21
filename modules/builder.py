@@ -12,6 +12,8 @@ import stats
 import builder_func
 
 def chunks(seq, n):
+    if not len(seq):
+        return []
     return (seq[i:i+n] for i in range(0, len(seq), n))
 
 class_cpt = Value('i', -1)
