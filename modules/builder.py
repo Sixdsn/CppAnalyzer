@@ -16,6 +16,12 @@ def chunks(seq, n):
         return []
     return (seq[i:i+n] for i in range(0, len(seq), n))
 
+def is_in_classes(classes, classename):
+    for classe in classes:
+        if classe.name == classename:
+            return True
+    return False
+
 class_cpt = Value('i', -1)
 file_cpt = Value('i', -1)
 
@@ -152,6 +158,8 @@ class SIXAnalyzer_builder():
                     print('Worker generated an exception: %s' % (exc))
                     continue
         sys.stdout = saveout
+        for classe in self.classes:
+            classe.check_inherits_namespace(self.classes)
 
 class CppClass():
     def __init__(self, filename):
@@ -180,6 +188,17 @@ class CppClass():
                 self.inherits.append(inherit['class'])
                 self.orig_inherits.append(inherit['class'])
                 logging.debug("Inherits: %s"% inherit['class'])
+
+    def check_inherits_namespace(self, classes):
+        if self.namespace:
+            for inherit in self.inherits:
+                if inherit.find("::") == -1:
+                    tmp = self.namespace + inherit
+                    if is_in_classes(classes, tmp):
+                        self.inherits.remove(inherit)
+                        self.orig_inherits.remove(inherit)
+                        self.inherits.append(tmp)
+                        self.orig_inherits.append(tmp)
 
     def append_ometh(self, meth):
         self.Omeths.append(meth)
