@@ -196,8 +196,12 @@ class CppClass():
                     tmp = self.namespace + inherit
                     if is_in_classes(classes, tmp):
                         self.inherits.remove(inherit)
-                        self.orig_inherits.remove(inherit)
                         self.inherits.append(tmp)
+            for inherit in self.orig_inherits:
+                if inherit.find("::") == -1:
+                    tmp = self.namespace + inherit
+                    if is_in_classes(classes, tmp):
+                        self.orig_inherits.remove(inherit)
                         self.orig_inherits.append(tmp)
 
     def append_ometh(self, meth):
