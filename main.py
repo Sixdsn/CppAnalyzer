@@ -2,7 +2,7 @@
 
 import sys
 
-sys.path[0:0] = [ "modules" ]
+sys.path[0] += "/modules"
 
 from rules import SIXAnalyzer_rules
 
